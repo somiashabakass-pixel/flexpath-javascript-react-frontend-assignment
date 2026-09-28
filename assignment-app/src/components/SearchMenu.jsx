@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
-function SearchMenu({ onSearch, loading, allData }) {
+function SearchMenu({ onSearch, loading, allData, statusMessage }) {
   const [filterType, setFilterType] = useState("gender");
   const [keyword, setKeyword] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
+  // Build autocomplete lists from dataset
   const allValues = {
     gender: [...new Set(allData.map((item) => item["Gender"]))],
     operatingsystem: [
@@ -17,6 +17,7 @@ function SearchMenu({ onSearch, loading, allData }) {
     ],
   };
 
+  // Autocomplete filtering
   useEffect(() => {
     if (keyword.length === 0) {
       setSuggestions([]);
@@ -32,20 +33,14 @@ function SearchMenu({ onSearch, loading, allData }) {
     setSuggestions(matches.slice(0, 6));
   }, [keyword, filterType, allData]);
 
-  useEffect(() => {
-    if (loading) {
-      setStatusMessage("Loading...");
-    } else {
-      setStatusMessage("");
-    }
-  }, [loading]);
-
+  // Search button click
   const handleClick = () => {
     onSearch(filterType, keyword);
   };
 
   return (
     <div className="mb-4">
+      {/* Filter Type Dropdown */}
       <div className="mb-3">
         <label className="form-label">Filter Type</label>
         <select
@@ -60,6 +55,7 @@ function SearchMenu({ onSearch, loading, allData }) {
         </select>
       </div>
 
+      {/* Keyword Input */}
       <div className="mb-3">
         <label className="form-label">keyword</label>
         <input
@@ -71,6 +67,7 @@ function SearchMenu({ onSearch, loading, allData }) {
         />
       </div>
 
+      {/* Autocomplete Suggestions */}
       {suggestions.length > 0 && (
         <ul className="list-group mb-3">
           {suggestions.map((item, index) => (
@@ -86,6 +83,7 @@ function SearchMenu({ onSearch, loading, allData }) {
         </ul>
       )}
 
+      {/* Search Button */}
       <button
         className="btn btn-primary mb-3"
         onClick={handleClick}
@@ -94,8 +92,10 @@ function SearchMenu({ onSearch, loading, allData }) {
         Search
       </button>
 
+      {/* Status Message from App.jsx */}
       <p className="fw-bold">{statusMessage}</p>
     </div>
   );
 }
+
 export default SearchMenu;

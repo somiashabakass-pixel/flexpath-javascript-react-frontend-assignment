@@ -1,21 +1,25 @@
-import { useState, useEffect } from "react";
-
 import SearchMenu from "./SearchMenu";
 import MetricsCards from "./MetricsCards";
 import SearchResults from "./SearchResults";
+import { useEffect, useState } from "react";
 
-function Search() {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [allData, setAllData] = useState([]);
-
-  //  Fetch full dataset IMMEDIATELY when component loads
+function Search({
+  results,
+  setResults,
+  loading,
+  setLoading,
+  error,
+  setError,
+  allData,
+  setAllData,
+}) {
   useEffect(() => {
-    fetch("http://localhost:3000/api/data/search")
-      .then((res) => res.json())
-      .then((data) => setAllData(data))
-      .catch((err) => console.error(err));
+    if (allData.length === 0) {
+      fetch("http://localhost:3000/api/data/search")
+        .then((res) => res.json())
+        .then((data) => setAllData(data))
+        .catch((err) => console.error(err));
+    }
   }, []);
 
   const handleSearch = async (filterType, keyword) => {
